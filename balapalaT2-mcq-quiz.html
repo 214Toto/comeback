@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            width: 300px;
+        }
+        .quiz-container h1 {
+            color: #dc3545;
+        }
+
+        .options button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .options button:hover {
+            background-color: #0056b3;
+        }
+
+        .options button.correct {
+            background-color: #28a745 !important;
+        }
+
+        .options button.wrong {
+            background-color: #dc3545 !important;
+        }
+
+        #feedback {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #next-button, #result-button {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #next-button:hover, #result-button:hover {
+            background-color: #0056b3;
+        }
+
+        .chapwa {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Physiology Quiz</h1>
+        <div id="question-container">
+            <h2 id="question">Question will appear here</h2>
+            <div class="options">
+                <button class="option" onclick="checkAnswer(this)">Option 1</button>
+                <button class="option" onclick="checkAnswer(this)">Option 2</button>
+                <button class="option" onclick="checkAnswer(this)">Option 3</button>
+                <button class="option" onclick="checkAnswer(this)">Option 4</button>
+                <button class="option" onclick="checkAnswer(this)">Option 5</button>
+            </div>
+            <p id="feedback"></p>
+            <button id="next-button" onclick="nextQuestion()">Next Question</button>
+            <button id="result-button" onclick="showResults()">See Results</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "The principle determinants of mean arterial pressure are:",
+                options: ["Cardiac output and Peripheral Resistance", "Arterial and Venous capacitance", "cardiac output and arterial capacitance", "Peripheral Resistance and Aterial Capacitance", "Cardiac Output and Venous Capacitance"],
+                correctAnswer: "Cardiac output and Peripheral Resistance"
+            },
+            {
+                question: "The increase in the arterial pulse pressure usually observed in an elderly hypertensive person is produced mainly by;",
+                options: ["An increase stroke volume", "An increase heart rate", "A decrease cardiac output", "An increase vagal activity", "A decreased arterial compliance"],
+                correctAnswer: "Mars"
+            },
+            {
+                question: "The circulatiry variable that is maintained relatively constant by the baro receptor reflex is:",
+                options: ["Heart rate", "Stroke Volume", "Peripheral resistance", "Velocity of blood flow", "Arterial blood pressure"],
+                correctAnswer: "Pacific Ocean"
+            },
+            {
+                question: "The medullary vasomotor centre is stimulated most effectively by:",
+                options: ["Decreased arterial blood oxygen tension", "Decreases arterial blood hydrogen ion cencentration", "Increased arterial blood adenosine concentration", "Increased arterial blood carbon dioxide tension", "Increase/decrease in arterial blood pressure"],
+                correctAnswer: "Harper Lee"
+            },
+
+            {
+                question: "Fluid flow through the circulatory system is in many respects similar to fluid flow through a tube, in that:",
+                options: ["Flow rate is faster near the center of flow", "It is directly proportional to the square of the diamter of the tube", "It is always characterised by laminar flow", "Flow rate is directly proportional to length of the tube", "The first and the third option are correct"],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "A young male aged 18 has been diagnosed with MONKEY POX at a hospital in Switzerland and is lying down flat. All of the following statements are correct EXCEPT:",
+                options: ["Systolic blood pressure declines during systole", "The pressure during systole is DBP", "The pressure during diastole is SBP", "The pressure in the left ventricle is 120/80mmHg", "The pressure in the right atrium is 120/80mmHg"],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "A pulse generator is a small metal case that contains electronic circulatory with a small computer and a battery that regulae the impulses sent to the heart. Propagation of an action potential through the heart is fastest in the:",
+                options: ["SA node", "Atrial muscle", "AV node", "Purkinje fibres", "Ventricular Muscle"],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "An increased preload on the left ventricle can be caused by:",
+                options: ["Decreased venous return", "Decreases blood pressure", "Increased venous return", "Atherosclerosis", "Arteriosclerosis"],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "Conduction of impulses between the atria and the ventricles is channeled through(responsible for delay);",
+                options: ["AV node", "Annulus fibrous", "SA node", "Bundle of His", "Hirkens fibres"],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "The prevalence of congestive heart failure based on clinical criteria is 2%. These estimates suggest that between 1 and 2 million adults are affected. In congestive heart failure, the following is coorect;",
+                options: ["The ventricular tissue is dead", "The atrial tissue is dead", "The pericardium is dead", "Heart chambers are not pumping afficiently", "None of the above are true"],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "Human heart is unique structure that can create its own voltage signals. The cardiac excitation-conduction system shows the following characteristics;",
+                options: ["The AV node is the auto rhythmic discharger of the upper portion of the heart", "The nodal delay allow the ventricles to contract before the atria", "The purkinje fibres shows the slowest rate of transmission", "The SA node is the pacemaker", "All the above are true"],
+                correctAnswer: "Harper Lee"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            document.getElementById('question').textContent = currentQuestion.question;
+            const buttons = document.querySelectorAll(".option");
+            buttons.forEach((btn, index) => {
+                btn.textContent = currentQuestion.options[index];
+                btn.disabled = false;
+                btn.classList.remove('correct', 'wrong');
+            });
+            document.getElementById('feedback').textContent = "";
+            document.getElementById('next-button').style.display = "none";
+        }
+
+        function checkAnswer(button) {
+            const currentQuestion = questions[currentQuestionIndex];
+            const buttons = document.querySelectorAll(".option");
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (button.textContent === currentQuestion.correctAnswer) {
+                button.classList.add('correct');
+                document.getElementById('feedback').textContent = "Correct!";
+                document.getElementById('feedback').style.color = "#28a745";
+                score++;
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('feedback').textContent = `Incorrect! The correct answer is ${currentQuestion.correctAnswer}.`;
+                document.getElementById('feedback').style.color = "#dc3545";
+
+                buttons.forEach(btn => {
+                    if (btn.textContent === currentQuestion.correctAnswer) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+
+            if (currentQuestionIndex < questions.length - 1) {
+                document.getElementById('next-button').style.display = "block";
+            } else {
+                document.getElementById('result-button').style.display = "block";
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function showResults() {
+            document.getElementById('question-container').innerHTML = `
+                <h2>Quiz Completed!</h2>
+                <p>Your Score: ${score} / ${questions.length}</p>
+                <button class="chapwa" onclick="window.location.href='anotherPage.html'"> Thanks For Attempting, Ulichikali iwe !!</button>
+            `;
+        }
+
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        .options button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .options button:hover {
+            background-color: #0056b3;
+        }
+
+        .options button.correct {
+            background-color: #28a745 !important;
+        }
+
+        .options button.wrong {
+            background-color: #dc3545 !important;
+        }
+
+        #feedback {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #next-button, #result-button {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #next-button:hover, #result-button:hover {
+            background-color: #0056b3;
+        }
+
+        .chapwa {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+        .result-box {
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(.9);
+            width: 300px;
+            background: transparent;
+            border: 2px solid #c40894;
+            border-radius: 6px;
+            padding: 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 1;
+            pointer-events: auto;
+            transition: .3s ease;
+            transform: translate(-50%, -50%) scale(1);
+            }
+            .percentage-container {
+                width: 300px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 20px 0px 40px;
+                }
+
+            .circular-progress {
+                position: relative;
+                width: 250px;
+                height: 250px;
+                background: conic-gradient(#c40094 3.6deg, rgba(255, 255, 255, .4) 0deg);
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                }
+
+            .circular-progress::before {
+                content: '';
+                position: absolute;
+                width: 210px;
+                height: 210px;
+                background: seagreen;
+                border-radius: 50%;
+                background: rgb(61, 65, 61);
+                }
+
+            .progress-value {
+                position: relative;
+                font-size: 45px;
+                font-weight: 600;
+                }
+
+            .score-text {
+                font-size: 26px;
+                font-weight: 600;
+                margin-top: 20px;
+                }
+
+            .result-box .buttons {
+                display: flex;
+                }
+
+            .buttons button{
+                width: 130px;
+                height: 47px;
+                outline: none;
+                background: #c40094;
+                border: 2px solid #c40094;
+                border-radius: 6px;
+                font-size: 16px;
+                color: #fff;
+                font-weight: 600;
+                margin: 0 20px 20px;
+                cursor: pointer;
+                transition: .3s;
+                }
+
+            .buttons button:nth-child(1):hover {
+                background: #950170;
+                color: #fff;
+                }
+
+            .buttons button:nth-child(2) {
+                background: transparent;
+                color: #c40094;
+                }
+
+            .buttons button:nth-child(2):hover {
+                background: #c40094;
+                color: #fff;
+                }
+
+        /* .quiz-section .result-box.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) scale(1);
+            } */
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>MCQ Quiz</h1>
+        <div id="question-container">
+            <h2 id="question">Question will appear here</h2>
+            <div class="options">
+                <button class="option" onclick="checkAnswer(this)">Option 1</button>
+                <button class="option" onclick="checkAnswer(this)">Option 2</button>
+                <button class="option" onclick="checkAnswer(this)">Option 3</button>
+                <button class="option" onclick="checkAnswer(this)">Option 4</button>
+            </div>
+            <p id="feedback"></p>
+            <button id="next-button" onclick="nextQuestion()">Next Question</button>
+            <button id="result-button" onclick="showResults()">See Results</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "One of the following is NOT a physiologic constant in a state of absence of disease normally :",
+                options: ["Normal range of Mean Cell Volume ", "Normal number of blood cells", "Normal distribution of blood cells ", "Normal haemoglobin ", "None of the above"],
+                correctAnswer: "Paris"
+            },
+            {
+                question: "The normal size of a red blood cell is :",
+                options: ["1-2um", "2-4mm3", "2-4μ m", "6-8 mm ", "6-8μ m"],
+                correctAnswer: "1-2um"
+            },
+            // {
+            //     question: "Which measurement is useful in determining whether a patient has either an obstructive or resistrive lung disease ?",
+            //     options: ["FEV1/FEF50%", "FEF25%/ PEFR ", "FEV1/FVC", "IRV / TV ", "FVC /FEV1"],
+            //     correctAnswer: "Pacific Ocean"
+            // },
+            // {
+            //     question: "The formula for MCHC is:",
+            //     options: ["Hb/RBC in volume of blood X 100", "Hb/Hematocrit X 100", "MCV/Mean of MCV X 100", "Hematocrit/Hb X 100", "None of the above"],
+            //     correctAnswer: "Harper Lee"
+            // },
+            // {
+            //     question: "One of the following CAN'T be determined accurately by Cardiac catheterization:",
+            //     options: ["Blocked heart blood vessels", "Blood pH", "Blood pressure", "Blood oxygen content", "None of the above"],
+            //     correctAnswer: "Harper Lee"
+            // },
+            // {
+            //     question: "PCR is",
+            //     options: ["DNA degradation technique", "DNA amplification technique", "DNA sequencing technique", "RNA degradation technique", "RNA extension technique"],
+            //     correctAnswer: "Harper Lee"
+            // },
+            // {
+            //     question: "DNA nitrogenous base pairs include all EXCEPT",
+            //     options: ["Thymine", "Guanine", "Adenine", "Uracil", "Cytosine"],
+            //     correctAnswer: "Harper Lee"
+            // },
+            // {
+            //     question: "The following bacterial species are associated with infection of the lower respiratory tract except",
+            //     options: ["Cornybacterium diphtheria", "Moraxella catarrhalis", "Bordetella pertussis", "Mycoplasma pneumonia", "Haemophilus influenza"],
+            //     correctAnswer: "Harper Lee"
+            // },
+            // {
+            //     question: "",
+            //     options: ["", "", "", "", ""],
+            //     correctAnswer: "Harper Lee"
+            // },
+            // {
+            //     question: "",
+            //     options: ["", "", "", "", ""],
+            //     correctAnswer: "Harper Lee"
+            // },
+            // {
+            //     question: "",
+            //     options: ["", "", "", "", ""],
+            //     correctAnswer: "Harper Lee"
+            // },
+            // {
+            //     question: "",
+            //     options: ["", "", "", "", ""],
+            //     correctAnswer: "Harper Lee"
+            // },
+            // {
+            //     question: "",
+            //     options: ["", "", "", "", ""],
+            //     correctAnswer: "Harper Lee"
+            // },
+            // {
+            //     question: "",
+            //     options: ["", "", "", "", ""],
+            //     correctAnswer: "Harper Lee"
+            // }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            document.getElementById('question').textContent = currentQuestion.question;
+            const buttons = document.querySelectorAll(".option");
+            buttons.forEach((btn, index) => {
+                btn.textContent = currentQuestion.options[index];
+                btn.disabled = false;
+                btn.classList.remove('correct', 'wrong');
+            });
+            document.getElementById('feedback').textContent = "";
+            document.getElementById('next-button').style.display = "none";
+        }
+
+        function checkAnswer(button) {
+            const currentQuestion = questions[currentQuestionIndex];
+            const buttons = document.querySelectorAll(".option");
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (button.textContent === currentQuestion.correctAnswer) {
+                button.classList.add('correct');
+                document.getElementById('feedback').textContent = "Correct!";
+                document.getElementById('feedback').style.color = "#28a745";
+                score++;
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('feedback').textContent = `Incorrect! The correct answer is ${currentQuestion.correctAnswer}.`;
+                document.getElementById('feedback').style.color = "#dc3545";
+
+                buttons.forEach(btn => {
+                    if (btn.textContent === currentQuestion.correctAnswer) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+
+            if (currentQuestionIndex < questions.length - 1) {
+                document.getElementById('next-button').style.display = "block";
+            } else {
+                document.getElementById('result-button').style.display = "block";
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function showResults() {
+            document.getElementById('question-container').innerHTML = `
+        <div class="result-box">
+          <h2>Quiz Result</h2>
+          <div class="percentage-container">
+              <div class="circular-progress">
+                <span class="progress-value">0%</span>
+              </div>
+
+              <span class="score-text">Your Score 0 out of 5</span>
+          </div>
+
+          <div class="buttons">
+            <button class="tryagain-btn">Try Again</button>
+            <button class="done-btn">Done</button>
+          </div>
+        </div>
+                <button class="chapwa" onclick="window.location.href='anotherPage.html'"> Thanks For Attempting, Ulichikali iwe !!</button>
+            `;
+        }
+
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>

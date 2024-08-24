@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQ Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .quiz-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        .options button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .options button:hover {
+            background-color: #0056b3;
+        }
+
+        .options button.correct {
+            background-color: #28a745 !important;
+        }
+
+        .options button.wrong {
+            background-color: #dc3545 !important;
+        }
+
+        #feedback {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        #next-button, #result-button {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #next-button:hover, #result-button:hover {
+            background-color: #0056b3;
+        }
+
+        .chapwa {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>MCQ Quiz</h1>
+        <div id="question-container">
+            <h2 id="question">Question will appear here</h2>
+            <div class="options">
+                <button class="option" onclick="checkAnswer(this)">Option 1</button>
+                <button class="option" onclick="checkAnswer(this)">Option 2</button>
+                <button class="option" onclick="checkAnswer(this)">Option 3</button>
+                <button class="option" onclick="checkAnswer(this)">Option 4</button>
+            </div>
+            <p id="feedback"></p>
+            <button id="next-button" onclick="nextQuestion()">Next Question</button>
+            <button id="result-button" onclick="showResults()">See Results</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Saturation of peripheral oxygen is measured by which procedure?",
+                options: ["Spirometry", "Arterial blood gas analyser", "Lung diffusion test", "Pulse oximetry", "Any of the above"],
+                correctAnswer: "Paris"
+            },
+            {
+                question: "Which of the following statements about the Mycobacterium tuberculosis cell wall is true?",
+                options: ["It is Gram negative.", "It has a thick mycolic acid layer.", " It has no peptidoglycan.", "It can be penetrated by most antibiotics."],
+                correctAnswer: "Mars"
+            },
+            {
+                question: "The following statements on culture of Mycobacterium tuberculosis are correct except?",
+                options: ["Solid culture requires the use of a BACTEC MGIT system.", "Culture can only be performed at referral level.", " Pre-treatment of sputum with NALC-NaOH is important for decontamination and concentration of bacilli.", "Liquid culture can take 20 days for growth to be observed."],
+                correctAnswer: "Pacific Ocean"
+            },
+            {
+                question: "In the grading of an AFB smear for identification of Mycobacterium tuberculosis using fluorescence microscopy:",
+                options: ["A 1+ is more infectious than a 3+.", "If 1 to 9 AFB are that is reported as 'No AFB seen'", "In a 2+, 5 to 50 AFB are seen per field.", "All of the above are correct."],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "Which of the listed identification methods for Mycobacterium tuberculosis will produce results within the same day?",
+                options: [" Liquid culture.", "GeneXpert.", "Biochemical tests.", "Solid culture."],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "What is the purpose of the denaturation step in PCR?",
+                options: ["To anneal primers to the DNA template", "To amplify the DNA target region", "To separate double-stranded DNA into single strands", "To synthesize new DNA strands"],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "Which DNA polymerase is commonly used in PCR?",
+                options: ["Taq polymerase", "DNA ligase", "Reverse transcriptase", "RNA polymerase"],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "What is the ideal temperature for the annealing step in PCR?",
+                options: ["72°C", "50°C", "95°C", "37°C"],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "Which of the following is not an application of PCR?",
+                options: ["DNA sequencing", "Genetic fingerprinting", "Gene expression analysis", "Antibiotic resistance testing"],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "What is the purpose of using primers in PCR?",
+                options: ["To amplify the DNA target region", "To separate double-stranded DNA into single strands", "To synthesize new DNA strands", "To identify RNA sequences"],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "Which one of the following is a diplococcus?",
+                options: ["Cryptococcus neoformans", "Klebsiella pneumoniae", "Viridans Streptococci", "Streptococcus pneumoniae"],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "Which one of the following is infective stage in an Ascaris lumbricoides?",
+                options: ["Male worm", "Female worm", "Egg", "All of the above"],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "Which one of the following organisms is used to cultivate in the Sabouraud dextrose agar medium?",
+                options: ["Virus", "Fungi", "Parasite", "All of the above"],
+                correctAnswer: "Harper Lee"
+            },
+            {
+                question: "The cytopathic effect of Adenoviruses is",
+                options: ["Cluster cells", "Small cluster cells", "Grape like cluster cells", "None of the above"],
+                correctAnswer: "Harper Lee"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            document.getElementById('question').textContent = currentQuestion.question;
+            const buttons = document.querySelectorAll(".option");
+            buttons.forEach((btn, index) => {
+                btn.textContent = currentQuestion.options[index];
+                btn.disabled = false;
+                btn.classList.remove('correct', 'wrong');
+            });
+            document.getElementById('feedback').textContent = "";
+            document.getElementById('next-button').style.display = "none";
+        }
+
+        function checkAnswer(button) {
+            const currentQuestion = questions[currentQuestionIndex];
+            const buttons = document.querySelectorAll(".option");
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (button.textContent === currentQuestion.correctAnswer) {
+                button.classList.add('correct');
+                document.getElementById('feedback').textContent = "Correct!";
+                document.getElementById('feedback').style.color = "#28a745";
+                score++;
+            } else {
+                button.classList.add('wrong');
+                document.getElementById('feedback').textContent = `Incorrect! The correct answer is ${currentQuestion.correctAnswer}.`;
+                document.getElementById('feedback').style.color = "#dc3545";
+
+                buttons.forEach(btn => {
+                    if (btn.textContent === currentQuestion.correctAnswer) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+
+            if (currentQuestionIndex < questions.length - 1) {
+                document.getElementById('next-button').style.display = "block";
+            } else {
+                document.getElementById('result-button').style.display = "block";
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function showResults() {
+            document.getElementById('question-container').innerHTML = `
+                <h2>Quiz Completed!</h2>
+                <p>Your Score: ${score} / ${questions.length}</p>
+                <button class="chapwa" onclick="window.location.href='anotherPage.html'"> Thanks For Attempting, Ulichikali iwe !!</button>
+            `;
+        }
+
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>

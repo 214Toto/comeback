@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Laboratory Science</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: rgb(22, 10, 65);
+            background: url(4.jpg);
+            font-weight: 500px;
+            /* background-color: rgb(165, 106, 28); */
+            font-family: 'Times New Roman', Times, serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: scroll;
+            height: fit-content;
+            }
+
+        .quiz-containment {
+            position: fixed;
+            filter: blur(10px);
+            z-index: -1;
+        }
+        .quiz-container {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            /* border: 1px solid #ccc; */
+            /* padding: 20px; */
+            border: 3px dotted #ccc;
+            border-radius: 10px;
+            background-color: rgb(155, 151, 145);
+            /* border-radius: 10px;
+            z-index: 1; */
+        }
+        .quiz-container button {
+            background-color: rgb(233, 184, 23);
+            border-radius: 6px;
+            border: solid;
+            color: rgb(7, 7, 6);
+        }
+        .question, .answer, .result {
+            margin-bottom: 20px;
+            /* background-color: blue; */
+            /* background-color: rgb(109, 129, 129); */
+        }
+        .question p {
+            color: rgb(47, 49, 41);
+            font-weight: bold;
+        }
+        .question img {
+            max-width: 15rem;
+            height: 15rem;
+            margin-top: 2px;
+            margin-left: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-containment"></div>
+    <div class="quiz-container">
+        <div id="question-container" class="question"></div>
+        <button id="show-answer-button">Show Answer</button>
+        <div id="answer-container" class="answer" style="display: none;"></div>
+        <button id="next-question-button" style="display: none;">Next Question</button>
+        <div id="result-container" class="result" style="display: none;"></div>
+        <button id="next-page-button" style="display: none;" onclick="goToNextPage()">Go to Next Page</button>
+    </div>
+
+    <script>
+        const questions = [
+            { question: "Discuss the Three(3) aspects of the pulmonary function.", answer: "Paris", },
+            { question: "What is 2 + 2?", answer: "4", image: "4.jpg" },
+            { question: "Who wrote 'To Kill a Mockingbird'?", answer: "Harper Lee", image: "https://example.com/book.jpg" }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const questionContainer = document.getElementById('question-container');
+        const answerContainer = document.getElementById('answer-container');
+        const showAnswerButton = document.getElementById('show-answer-button');
+        const nextQuestionButton = document.getElementById('next-question-button');
+        const resultContainer = document.getElementById('result-container');
+        const nextPageButton = document.getElementById('next-page-button');
+
+        function showQuestion() {
+            const question = questions[currentQuestionIndex];
+            questionContainer.innerHTML = `<p>Question ${currentQuestionIndex + 1}: ${question.question}</p>`;
+            if (question.image) {
+                questionContainer.innerHTML += `<img src="${question.image}" alt="Question Image">`;
+            }
+            answerContainer.textContent = `Answer: ${question.answer}`;
+            answerContainer.style.display = 'none';
+            showAnswerButton.style.display = 'inline-block';
+            nextQuestionButton.style.display = 'none';
+        }
+
+        function showAnswer() {
+            answerContainer.style.display = 'block';
+            showAnswerButton.style.display = 'none';
+            nextQuestionButton.style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            const correct = confirm("Did you get it correct?");
+            if (correct) score++;
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            questionContainer.style.display = 'none';
+            answerContainer.style.display = 'none';
+            showAnswerButton.style.display = 'none';
+            nextQuestionButton.style.display = 'none';
+            resultContainer.style.display = 'block';
+            resultContainer.textContent = `Your final score is ${score} out of ${questions.length}.`;
+            nextPageButton.style.display = 'inline-block';
+        }
+
+        function goToNextPage() {
+            window.location.href = "index.html"; // Replace with the actual URL of the next page
+        }
+
+        showAnswerButton.addEventListener('click', showAnswer);
+        nextQuestionButton.addEventListener('click', nextQuestion);
+
+        showQuestion();
+    </script>
+</body>
+</html>
